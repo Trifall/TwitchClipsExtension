@@ -17,5 +17,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 		message: request.message,
 		priority: 2,
 	});
+	// send response data is ok
+	sendResponse({ data: 'ok' });
 	return true;
 });
