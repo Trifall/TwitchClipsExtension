@@ -1,12 +1,12 @@
 {
     "name": "Twitch Clips Helper",
-    "description": "Automatically grab links from the selected twitch clips on the dashboard.",
+    "description": "Automatically grab links from the selected twitch clips on the dashboard (https://dashboard.twitch.tv/u/<user>/content/clips).",
     "version": "1.0",
     "manifest_version": 3,
     "background": {
         "service_worker": "background.js"
     },
-    "permissions": ["tabs", "storage", "activeTab", "scripting"],
+    "permissions": ["tabs", "storage", "activeTab", "scripting", "notifications"],
     "content_scripts": [
         {
             "matches": ["https://dashboard.twitch.tv/u*clips"],
@@ -14,15 +14,6 @@
             "run_at": "document_end"
         }
     ],
-    "action": {
-        "default_popup": "popup.html",
-        "default_icon": {
-            "16": "/images/get_started16.png",
-            "32": "/images/get_started32.png",
-            "48": "/images/get_started48.png",
-            "128": "/images/get_started128.png"
-        }
-    },
     "icons": {
         "16": "/images/get_started16.png",
         "32": "/images/get_started32.png",
