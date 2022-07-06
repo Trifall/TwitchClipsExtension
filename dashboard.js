@@ -31,7 +31,7 @@ async function main() {
 	button.innerHTML = 'Compile Clip Links';
 	button.onclick = function () {
 		clip_links = [];
-		console.log('[Clips-Helper] ' + 'Starting to compile clip links...');
+		console.log('[Clips-Helper] (Start)' + 'Starting to compile clip links...');
 		grabClips();
 	};
 	//insert the button into the ButtonDiv at the top
@@ -74,6 +74,24 @@ async function grabClips() {
 		}
 	}
 
+	if (clips_buttons.length == 0) {
+		let notif_object = {
+			type: 'notification',
+			title: 'Clips Helper - Error',
+			message:
+				'No clips selected on the dashboard.\nSelect 1 or more clips and try again.',
+		};
+
+		chrome.runtime.sendMessage(notif_object, function (response) {
+			console.log(response.data);
+		});
+
+		console.log(
+			'[Clips-Helper] (Finish) ' + 'No clips selected on the dashboard.'
+		);
+		return;
+	}
+
 	// console.log('[Clips-Helper] ' + 'Clip button count: ' + clips_buttons.length);
 
 	await grabLinks(clips_indexes, clips_panel_list, clips_buttons);
@@ -94,19 +112,24 @@ async function grabClips() {
 				' clip links to clipboard'
 		);
 
-		await chrome.runtime.sendMessage(
-			{
-				type: 'notification',
-				title: 'Clips Helper - Completed',
-				message: 'Copied ' + clip_links.length + ' clip links to clipboard',
-			},
-			function (response) {
-				console.log(response.data);
-			}
-		);
+		let notif_object = {
+			type: 'notification',
+			title: 'Clips Helper - Completed',
+			message: 'Copied ' + clip_links.length + ' clip link(s) to clipboard',
+		};
+
+		// console.log(
+		// 	'[Clips-Helper] ' +
+		// 		'Notification: ' +
+		// 		JSON.stringify(notif_object, null, 2)
+		// );
+
+		chrome.runtime.sendMessage(notif_object, function (response) {
+			console.log(response.data);
+		});
 	} else console.log('[Clips-Helper] ' + 'No Clip links found');
 
-	console.log('[Clips-Helper] ' + 'Clip links compiled');
+	console.log('[Clips-Helper] (Finish) ' + 'Clip links compiled');
 }
 
 async function grabLinks(clips_indexes, clips_panels_list, clips_buttons) {
