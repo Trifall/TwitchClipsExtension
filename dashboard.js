@@ -21,7 +21,7 @@ async function main() {
 		ButtonDiv = document.querySelector(buttonSelector);
 	}
 
-	console.log('[Clips-Helper] ' + 'extension is running');
+	console.log('[Clips-Helper] ' + 'Extension initialized');
 	//console.log('[Clips-Helper] ' + ButtonDiv.innerHTML);
 
 	var button = document.createElement('button');
