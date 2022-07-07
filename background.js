@@ -6,9 +6,15 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 	// );
 	if (request.type != 'notification') return;
 
-	if (request.title == null || request.message == null) return;
+	if (
+		request.title == null ||
+		request.message == null ||
+		request.notif_name == null
+	)
+		return;
 
-	if (request.title == '' || request.message == '') return;
+	if (request.title == '' || request.message == '' || request.notif_name == '')
+		return;
 
 	// console.log(
 	// 	'[Clips-Helper] ' +
@@ -17,7 +23,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 	// 		' - ' +
 	// 		request.message
 	// );
-	chrome.notifications.create('clips-helper-notif', {
+
+	// generate a random number between 1 and 100000
+	let random_number = Math.floor(Math.random() * 100000) + 1;
+
+	chrome.notifications.create(request.notif_name + '_' + random_number, {
 		type: 'basic',
 		iconUrl: 'images/logo_48.png',
 		title: request.title,

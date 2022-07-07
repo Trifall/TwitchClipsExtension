@@ -8,6 +8,7 @@ window.addEventListener(
 );
 
 var clip_links = [];
+var clip_titles = [];
 
 async function main() {
 	let buttonSelector =
@@ -31,6 +32,7 @@ async function main() {
 	button.innerHTML = 'Compile Clip Links';
 	button.onclick = function () {
 		clip_links = [];
+		clip_titles = [];
 		console.log('[Clips-Helper] (Start)' + 'Starting to compile clip links...');
 		grabClips();
 	};
@@ -76,6 +78,7 @@ async function grabClips() {
 
 	if (clips_buttons.length == 0) {
 		let notif_object = {
+			notif_name: 'clips-helper-error-notif',
 			type: 'notification',
 			title: 'Clips Helper - Error',
 			message:
@@ -113,6 +116,7 @@ async function grabClips() {
 		);
 
 		let notif_object = {
+			notif_name: 'clips-helper-success-notif',
 			type: 'notification',
 			title: 'Clips Helper - Completed',
 			message: 'Copied ' + clip_links.length + ' clip link(s) to clipboard',
@@ -146,6 +150,12 @@ async function grabLinks(clips_indexes, clips_panels_list, clips_buttons) {
 		//var clip_link = clips_panels_list.children[]
 
 		let clip_link_element;
+
+		let clip_title = clip_button.querySelector(
+			'div > div.ScColumn-sc-tzah5l-0.bLLxGl.tw-col > div > h5'
+		).innerHTML;
+
+		clip_titles.push(clip_title);
 
 		while (
 			clips_panels_list.children[clips_indexes[i]].hasAttribute('data-a-target')
@@ -200,6 +210,45 @@ async function grabLinks(clips_indexes, clips_panels_list, clips_buttons) {
 		// 		'clips children length: ' +
 		// 		clips_panel_list.children.length
 		// );
+	}
+
+	let clip_duplicate_titles = [];
+	// add duplicate strings in the clip_titles array to the array clip_duplicate_titles
+	const alreadySeen = {};
+
+	clip_titles.forEach((str) =>
+		alreadySeen[str]
+			? clip_duplicate_titles.push(str)
+			: (alreadySeen[str] = true)
+	);
+
+	// should be fixed TODO: test this, check dupe string imp
+
+	// console.log(
+	// 	'[Clips-Helper] dupe titles length: ' + clip_duplicate_titles.length
+	// );
+
+	// print out all the duplicate strings
+	//console.log('Alreadyseen: ' + alreadySeen);
+
+	if (clip_duplicate_titles.length > 0) {
+		let duplicate_message =
+			'Duplicate clip titles found: ' + clip_duplicate_titles.join(', ');
+
+		console.log('[Clips-Helper] {Warning} ' + duplicate_message);
+
+		let notif_object = {
+			notif_name: 'clips-helper-dupe-notif',
+			type: 'notification',
+			title: 'Clips Helper - Warning',
+			message: duplicate_message,
+		};
+
+		// await sleep(200);
+		// console.log('sending notif for chrome');
+		chrome.runtime.sendMessage(notif_object, function (response) {
+			console.log(response.data);
+		});
 	}
 }
 
