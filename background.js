@@ -35,6 +35,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 		priority: 2,
 	});
 	// send response data is ok
-	sendResponse({ data: '[Clips-Helper] Service Worker Response: Success' });
+	sendResponse({ data: '[Clips-Helper] Service Worker Notification: Success' });
 	return true;
 });

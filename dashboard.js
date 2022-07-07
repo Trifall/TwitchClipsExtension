@@ -33,7 +33,9 @@ async function main() {
 	button.onclick = function () {
 		clip_links = [];
 		clip_titles = [];
-		console.log('[Clips-Helper] (Start)' + 'Starting to compile clip links...');
+		console.log(
+			'[Clips-Helper] (Start) ' + 'Starting to compile clip links...'
+		);
 		grabClips();
 	};
 	//insert the button into the ButtonDiv at the top
@@ -213,27 +215,53 @@ async function grabLinks(clips_indexes, clips_panels_list, clips_buttons) {
 	}
 
 	let clip_duplicate_titles = [];
+	let clip_duplicate_titles_counts = [];
 	// add duplicate strings in the clip_titles array to the array clip_duplicate_titles
 	const alreadySeen = {};
 
-	clip_titles.forEach((str) =>
-		alreadySeen[str]
-			? clip_duplicate_titles.push(str)
-			: (alreadySeen[str] = true)
-	);
-
-	// should be fixed TODO: test this, check dupe string imp
+	clip_titles.forEach((title) => {
+		if (!clip_duplicate_titles.includes(title)) {
+			let value = getOccurrence(clip_titles, title);
+			if (value > 1) {
+				clip_duplicate_titles.push(title);
+				clip_duplicate_titles_counts.push(value);
+			}
+		}
+	});
 
 	// console.log(
 	// 	'[Clips-Helper] dupe titles length: ' + clip_duplicate_titles.length
+	// );
+
+	// console.log(
+	// 	'[Clips-Helper] ' +
+	// 		'clip_duplicate_titles_counts length: ' +
+	// 		clip_duplicate_titles_counts.length
 	// );
 
 	// print out all the duplicate strings
 	//console.log('Alreadyseen: ' + alreadySeen);
 
 	if (clip_duplicate_titles.length > 0) {
-		let duplicate_message =
-			'Duplicate clip titles found: ' + clip_duplicate_titles.join(', ');
+		let duplicate_message = 'Duplicate clip titles found: ';
+
+		for (var i = 0; i < clip_duplicate_titles.length; i++) {
+			//if last iteration
+			if (i == clip_duplicate_titles.length - 1)
+				duplicate_message +=
+					"'" +
+					clip_duplicate_titles[i] +
+					"' [" +
+					clip_duplicate_titles_counts[i] +
+					']';
+			else
+				duplicate_message +=
+					"'" +
+					clip_duplicate_titles[i] +
+					"' [" +
+					clip_duplicate_titles_counts[i] +
+					'], ';
+		}
 
 		console.log('[Clips-Helper] {Warning} ' + duplicate_message);
 
@@ -250,6 +278,10 @@ async function grabLinks(clips_indexes, clips_panels_list, clips_buttons) {
 			console.log(response.data);
 		});
 	}
+}
+
+function getOccurrence(array, value) {
+	return array.filter((v) => v === value).length;
 }
 
 // promise sleep function
