@@ -6,7 +6,7 @@
     "background": {
         "service_worker": "background.js"
     },
-    "permissions": ["scripting", "notifications", "clipboardWrite"],
+    "permissions": ["notifications", "clipboardWrite"],
     "content_scripts": [
         {
             "matches": ["https://dashboard.twitch.tv/u*clips"],
