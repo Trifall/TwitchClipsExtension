@@ -13,6 +13,7 @@ let duplicateCheck = (clip_titles) => {
 	let clip_duplicate_titles = [];
 	let clip_duplicate_titles_counts = [];
 
+	// check for duplicates in the titles
 	clip_titles.forEach((title) => {
 		if (!clip_duplicate_titles.includes(title)) {
 			let value = getOccurrence(clip_titles, title);
@@ -23,9 +24,11 @@ let duplicateCheck = (clip_titles) => {
 		}
 	});
 
+	// if there are duplicates found
 	if (clip_duplicate_titles.length > 0) {
 		let duplicate_message = 'Duplicate clip titles found: ';
 
+		// create the warning duplicate message
 		for (var i = 0; i < clip_duplicate_titles.length; i++) {
 			//if last iteration
 			if (i == clip_duplicate_titles.length - 1)
@@ -46,6 +49,7 @@ let duplicateCheck = (clip_titles) => {
 
 		debugLog('{Warning} ' + duplicate_message);
 
+		// send a duplicate notification warning
 		dupeNotif(duplicate_message);
 	}
 };
