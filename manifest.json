@@ -10,7 +10,7 @@
     "content_scripts": [
         {
             "matches": ["https://dashboard.twitch.tv/u*clips"],
-            "js": ["dashboard.js"],
+            "js": ["dashboard.js", "notif.js", "util.js", "createButton.js"],
             "run_at": "document_end"
         }
     ],

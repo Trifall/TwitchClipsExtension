@@ -25,6 +25,6 @@ chrome.runtime.onMessage.addListener(async function (
 		priority: 2,
 	});
 	// send response data is ok
-	sendResponse({ data: '[Clips-Helper] Service Worker Notification: Success' });
+	sendResponse({ data: 'Service Worker Notification: Success' });
 	return true;
 });
