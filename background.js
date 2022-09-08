@@ -1,9 +1,8 @@
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-	// console.log(
-	// 	sender.tab
-	// 		? 'from a content script:' + sender.tab.url
-	// 		: 'from the extension'
-	// );
+chrome.runtime.onMessage.addListener(async function (
+	request,
+	sender,
+	sendResponse
+) {
 	if (request.type != 'notification') return;
 
 	if (
@@ -16,15 +15,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 	if (request.title == '' || request.message == '' || request.notif_name == '')
 		return;
 
-	// console.log(
-	// 	'[Clips-Helper] ' +
-	// 		'Notification: ' +
-	// 		request.title +
-	// 		' - ' +
-	// 		request.message
-	// );
-
-	// generate a random number between 1 and 100000
 	let random_number = Math.floor(Math.random() * 100000) + 1;
 
 	chrome.notifications.create(request.notif_name + '_' + random_number, {

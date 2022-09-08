@@ -21,8 +21,7 @@ async function main() {
 		ButtonDiv = document.querySelector(buttonSelector);
 	}
 
-	console.log('[Clips-Helper] ' + 'Extension initialized');
-	//console.log('[Clips-Helper] ' + ButtonDiv.innerHTML);
+	console.log('[Clips-Helper] ' + 'Initialized');
 
 	var button = document.createElement('button');
 	button.style.border = '2px solid #3aa757';
@@ -53,7 +52,7 @@ async function grabClips() {
 	var clip_panels = clips_panel_list.children;
 
 	//print out all the children of the clips_panel_list
-	// console.log('[Clips-Helper] ' + 'clip_panels: ' + clip_panels);
+	console.log('[Clips-Helper] ' + 'clip_panels: ' + clip_panels);
 
 	// get the button elements from each of the clicked clips
 	for (var i = 0; i < clip_panels.length - 1; i++) {
@@ -61,22 +60,30 @@ async function grabClips() {
 
 		var clip_button = clip_panel.querySelector('button');
 
+		if (
+			clip_button.getAttribute('onclick') != null ||
+			clip_button.getAttribute('href') != null
+		) {
+			console.log('[Clips-Helper] onClick is valid');
+		} else console.log('[Clips-Helper] onClick is not valid');
+
 		var clip_checkbox_div = clip_button.querySelector(
 			'div > div.ScColumn-sc-tzah5l-0.bLLxGl.tw-col > div > div > div.Layout-sc-nxg1ff-0.ScCheckboxLayout-sc-1qewoje-0.fcPbos.lfrrrb.tw-checkbox'
 		);
-		//console.log('[Clips-Helper] inputhtml: ' + clip_button);
 
 		// set clip_input to the first child of clip_button
 		var clip_input = clip_checkbox_div.firstChild;
-		// console.log(
-		// 	'[Clips-Helper] ' + 'clip_input [' + i + ']: ' + clip_input.checked
-		// );
+		console.log(
+			'[Clips-Helper] ' + 'clip_input [' + i + ']: ' + clip_input.checked
+		);
 		// if clip_input is checked, add the respective clip_button to the clips_buttons array
 		if (clip_input.checked) {
 			clips_buttons.push(clip_button);
 			clips_indexes.push(i);
 		}
 	}
+
+	console.log('[Clips-Helper] ' + 'clips_buttons: ' + clips_buttons);
 
 	if (clips_buttons.length == 0) {
 		let notif_object = {
@@ -87,7 +94,7 @@ async function grabClips() {
 				'No clips selected on the dashboard.\nSelect 1 or more clips and try again.',
 		};
 
-		chrome.runtime.sendMessage(notif_object, function (response) {
+		await chrome.runtime.sendMessage(notif_object, function (response) {
 			console.log(response.data);
 		});
 
@@ -97,7 +104,7 @@ async function grabClips() {
 		return;
 	}
 
-	// console.log('[Clips-Helper] ' + 'Clip button count: ' + clips_buttons.length);
+	console.log('[Clips-Helper] ' + 'Clip button count: ' + clips_buttons.length);
 
 	await grabLinks(clips_indexes, clips_panel_list, clips_buttons);
 
@@ -105,6 +112,7 @@ async function grabClips() {
 		console.log('[Clips-Helper] ' + 'Clip links found: ' + clip_links.length);
 		let copyTextString = '';
 		for (let i = 0; i < clip_links.length; i++) {
+			console.log('[Clips-Helper] ' + 'Clip link: ' + clip_links[i]);
 			// if last element, dont add new line
 			if (i == clip_links.length - 1) copyTextString += clip_links[i];
 			else copyTextString += clip_links[i] + '\n';
@@ -124,12 +132,6 @@ async function grabClips() {
 			message: 'Copied ' + clip_links.length + ' clip link(s) to clipboard',
 		};
 
-		// console.log(
-		// 	'[Clips-Helper] ' +
-		// 		'Notification: ' +
-		// 		JSON.stringify(notif_object, null, 2)
-		// );
-
 		chrome.runtime.sendMessage(notif_object, function (response) {
 			console.log(response.data);
 		});
@@ -141,13 +143,15 @@ async function grabClips() {
 async function grabLinks(clips_indexes, clips_panels_list, clips_buttons) {
 	// get the clip_links from the clips_buttons
 	for (var i = 0; i < clips_buttons.length; i++) {
-		await sleep(10);
+		await sleep(100);
 		var clip_button = clips_buttons[i];
-		//console.log('[Clips-Helper] ' + 'clip_button: ' + clip_button);
+		console.log('[Clips-Helper] ' + 'clip_button: ' + clip_button.outerHTML);
 		clip_button.click();
-		// console.log(
-		// 	'[Clips-Helper] ' + 'Opening Clip Panel with index [' + i + ']'
-		// );
+		// clip_button.dispatchEvent(new MouseEvent('mousedown'));
+		// clip_button.dispatchEvent(new MouseEvent('mouseup'));
+		console.log(
+			'[Clips-Helper] ' + 'Opening Clip Panel with index [' + i + ']'
+		);
 
 		//var clip_link = clips_panels_list.children[]
 
@@ -201,23 +205,10 @@ async function grabLinks(clips_indexes, clips_panels_list, clips_buttons) {
 		clips_panel_list = document.querySelector(
 			'#root > div.Layout-sc-nxg1ff-0.jNlVGw > div > div > div.Layout-sc-nxg1ff-0.aleoz.sunlight-default-root__root-wrapper > div > main > div > div.simplebar-scroll-content > div > div > div > div > div.Layout-sc-nxg1ff-0.imwtan.clmgr-table-wrap > div.Layout-sc-nxg1ff-0.fQeqDH.clmgr-table-inner > div > div.simplebar-scroll-content > div > div'
 		);
-
-		// console.log(
-		// 	'[Clips-Helper] ' +
-		// 		'clips children count: ' +
-		// 		clips_panel_list.childElementCount
-		// );
-		// console.log(
-		// 	'[Clips-Helper] ' +
-		// 		'clips children length: ' +
-		// 		clips_panel_list.children.length
-		// );
 	}
 
 	let clip_duplicate_titles = [];
 	let clip_duplicate_titles_counts = [];
-	// add duplicate strings in the clip_titles array to the array clip_duplicate_titles
-	const alreadySeen = {};
 
 	clip_titles.forEach((title) => {
 		if (!clip_duplicate_titles.includes(title)) {
@@ -228,19 +219,6 @@ async function grabLinks(clips_indexes, clips_panels_list, clips_buttons) {
 			}
 		}
 	});
-
-	// console.log(
-	// 	'[Clips-Helper] dupe titles length: ' + clip_duplicate_titles.length
-	// );
-
-	// console.log(
-	// 	'[Clips-Helper] ' +
-	// 		'clip_duplicate_titles_counts length: ' +
-	// 		clip_duplicate_titles_counts.length
-	// );
-
-	// print out all the duplicate strings
-	//console.log('Alreadyseen: ' + alreadySeen);
 
 	if (clip_duplicate_titles.length > 0) {
 		let duplicate_message = 'Duplicate clip titles found: ';
@@ -314,4 +292,5 @@ function copyTextToClipboard(text) {
 	//Remove the textbox field from the document.body, so no other JavaScript nor
 	//other elements can get access to this.
 	document.body.removeChild(copyFrom);
+	console.log('[Clips-Helper] ' + 'Copied to clipboard: ' + text);
 }
