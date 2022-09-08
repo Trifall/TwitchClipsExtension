@@ -11,18 +11,22 @@ var clip_links = [];
 var clip_titles = [];
 
 async function main() {
+	// select main panel
 	let buttonSelector =
 		'#root > div.Layout-sc-nxg1ff-0.jNlVGw > div > div > div.Layout-sc-nxg1ff-0.aleoz.sunlight-default-root__root-wrapper > div > main > div > div.simplebar-scroll-content > div > div > div > div > div.Layout-sc-nxg1ff-0.imwtan.clmgr-table-wrap > div.Layout-sc-nxg1ff-0.gaKKxR > div > div.Layout-sc-nxg1ff-0.cyXQoi > div:nth-child(2)';
 
+	// init div selection
 	var ButtonDiv = document.querySelector(buttonSelector);
 
+	// if its not there, wait 1 second and try again
 	while (ButtonDiv == null) {
-		await sleep(500);
+		await sleep(1000);
 		ButtonDiv = document.querySelector(buttonSelector);
 	}
 
 	console.log('[Clips-Helper] ' + 'Initialized');
 
+	// button for link gathering
 	var button = document.createElement('button');
 	button.style.border = '2px solid #3aa757';
 	button.style.marginRight = '5px';
@@ -42,6 +46,7 @@ async function main() {
 }
 
 async function grabClips() {
+	// individual clip panel list
 	let clips_panel_list = document.querySelector(
 		'#root > div.Layout-sc-nxg1ff-0.jNlVGw > div > div > div.Layout-sc-nxg1ff-0.aleoz.sunlight-default-root__root-wrapper > div > main > div > div.simplebar-scroll-content > div > div > div > div > div.Layout-sc-nxg1ff-0.imwtan.clmgr-table-wrap > div.Layout-sc-nxg1ff-0.fQeqDH.clmgr-table-inner > div > div.simplebar-scroll-content > div > div'
 	);
@@ -144,16 +149,15 @@ async function grabLinks(clips_indexes, clips_panels_list, clips_buttons) {
 	// get the clip_links from the clips_buttons
 	for (var i = 0; i < clips_buttons.length; i++) {
 		await sleep(100);
+
 		var clip_button = clips_buttons[i];
-		console.log('[Clips-Helper] ' + 'clip_button: ' + clip_button.outerHTML);
+
+		// console.log('[Clips-Helper] ' + 'clip_button: ' + clip_button.outerHTML);
 		clip_button.click();
-		// clip_button.dispatchEvent(new MouseEvent('mousedown'));
-		// clip_button.dispatchEvent(new MouseEvent('mouseup'));
+
 		console.log(
 			'[Clips-Helper] ' + 'Opening Clip Panel with index [' + i + ']'
 		);
-
-		//var clip_link = clips_panels_list.children[]
 
 		let clip_link_element;
 
@@ -184,6 +188,7 @@ async function grabLinks(clips_indexes, clips_panels_list, clips_buttons) {
 		}
 
 		let clip_link = clip_link_element.getAttribute('href');
+
 		// remove everything in the string after the first '?'
 		clip_link = clip_link.substring(0, clip_link.indexOf('?'));
 
@@ -269,28 +274,12 @@ function sleep(ms) {
 
 // copy text to clipboard hack
 function copyTextToClipboard(text) {
-	//Create a textbox field where we can insert text to.
 	var copyFrom = document.createElement('textarea');
-
-	//Set the text content to be the text you wished to copy.
 	copyFrom.textContent = text;
-
-	//Append the textbox field into the body as a child.
-	//"execCommand()" only works when there exists selected text, and the text is inside
-	//document.body (meaning the text is part of a valid rendered HTML element).
 	document.body.appendChild(copyFrom);
-
-	//Select all the text!
 	copyFrom.select();
-
-	//Execute command
 	document.execCommand('copy');
-
-	//(Optional) De-select the text using blur().
 	copyFrom.blur();
-
-	//Remove the textbox field from the document.body, so no other JavaScript nor
-	//other elements can get access to this.
 	document.body.removeChild(copyFrom);
 	console.log('[Clips-Helper] ' + 'Copied to clipboard: ' + text);
 }
