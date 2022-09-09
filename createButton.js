@@ -1,3 +1,9 @@
+/*
+	Function: Creates the button for the dashboard page
+	Parameters: ButtonDiv - the div element that the button will be inserted into
+	Returns: None
+	Notes: Only called after the window has been fully loaded
+*/
 let createButton = async (ButtonDiv) => {
 	// button for link gathering
 	var button = document.createElement('button');

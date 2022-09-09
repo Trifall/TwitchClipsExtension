@@ -1,3 +1,9 @@
+/*
+	Function: error notification function that sends a message to the background service worker to create a notification
+	Parameters: error_message - the error message to be displayed in the notification
+	Returns: None
+	Notes: None
+*/
 let errorNotif = async (message) => {
 	let notif_object = {
 		notif_name: 'clips-helper-error-notif',
@@ -10,9 +16,17 @@ let errorNotif = async (message) => {
 		debugLog(response.data, true);
 	});
 
+	debugLog('{Error} ' + message);
+
 	debugLog('(Finish) No clips selected on the dashboard.');
 };
 
+/*
+	Function: success notification function that sends a message to the background service worker to create a notification
+	Parameters: links_length - the number of links that were successfully compiled
+	Returns: None
+	Notes: None
+*/
 let successNotif = async (links_length) => {
 	let notif_object = {
 		notif_name: 'clips-helper-success-notif',
@@ -28,6 +42,12 @@ let successNotif = async (links_length) => {
 	debugLog(notif_object.message);
 };
 
+/*
+	Function: sends a message to the background service worker to create a duplicate warning notification
+	Parameters: duplicate_message - the duplicate message to be displayed in the notification
+	Returns: None
+	Notes: None
+*/
 let dupeNotif = async (duplicate_message) => {
 	let notif_object = {
 		notif_name: 'clips-helper-dupe-notif',
@@ -36,8 +56,11 @@ let dupeNotif = async (duplicate_message) => {
 		message: duplicate_message,
 	};
 
-	// console.log('sending notif for chrome');
+	// send the notification to the background service worker
 	chrome?.runtime?.sendMessage(notif_object, function (response) {
 		debugLog(response.data, true);
 	});
+
+	// log the notification to the console
+	debugLog('{Warning} ' + duplicate_message);
 };

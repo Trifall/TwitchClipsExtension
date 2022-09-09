@@ -7,11 +7,20 @@ window.addEventListener(
 	false
 );
 
+// Development mode flag
 const development = false;
 
+// Global variables that get reset and used throughout the extension
 var clip_links = [];
 var clip_titles = [];
 
+/*
+ * Function: Entry point function
+ * Parameters: None
+ * Returns: None
+ * Notes: This function is called when the page is loaded
+ * 	- Waits for the window to be fully loaded in order to add the button to the page.
+ */
 async function main() {
 	// init div selection
 	var ButtonDiv;
@@ -30,6 +39,11 @@ async function main() {
 	createButton(ButtonDiv);
 }
 
+/*
+ * Function: Grabs the selected clips via the checkboxes and calls the grabClipLinks function after all the appropriate button elements are found
+ * Parameters: None
+ * Returns: None
+ */
 async function grabClips() {
 	// get the element of the clip list panel
 	let clips_panel_list = document.querySelector(
@@ -106,6 +120,15 @@ async function grabClips() {
 	debugLog('(Finish) Clip links compiled');
 }
 
+/*
+ * Function: Uses the selected buttons to open each panel of the selected clips and grab the links from the generated link elements
+ * Parameters:
+ * 	- clips_indexes: the indexes of the selected clips
+ * 	- clips_panel_list: the HTMLElement of the list of clip panels
+ * 	- clips_buttons: the HTMLElements of the selected clip buttons
+ * Returns: None
+ * Notes: Had to make the clip_button_clickable variable because for some reason the clip_button.click() function was not working
+ */
 async function grabClipLinks(clips_indexes, clips_panels_list, clips_buttons) {
 	// get the clip_links from the clips_buttons
 
@@ -182,6 +205,11 @@ async function grabClipLinks(clips_indexes, clips_panels_list, clips_buttons) {
 	duplicateCheck(clip_titles);
 }
 
+/*
+ * Function: Getter method for the development variable
+ * Parameters: None
+ * Returns: None
+ */
 let getDevelopment = () => {
 	return development;
 };
