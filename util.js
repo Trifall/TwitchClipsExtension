@@ -1,9 +1,14 @@
-/*
-	Function: Logging handler function to check whether the extension is in development mode or not
-	Parameters: message - the message to be logged, devOnly (optional) - whether the message should only be logged if the extension is in development mode
-	Returns: None
-	Notes: None
-*/
+/**
+ * @fileoverview File contains the utility functions for the extension
+ * 	- Logging function, Duplicate check function, Copy to clipboard function, Sleep function
+ */
+
+/**
+ * @description Logging handler function to check whether the extension is in development mode or not
+ * @param {*} messagethe message to be logged
+ * @param {*} [devOnly] (optional) whether the message should only be logged if the extension is in development mode
+ * @return {void} void
+ */
 let debugLog = async (message, devOnly) => {
 	if (devOnly != undefined && getDevelopment()) {
 		console.log('[Clips-Helper] ' + message);
@@ -11,22 +16,20 @@ let debugLog = async (message, devOnly) => {
 	else console.log('[Clips-Helper] ' + message);
 };
 
-/*
-	Function: gets the number of occurrences of a value in an array
-	Parameters: array - the array to be searched, value - the value to be searched for
-	Returns: the number of occurrences of the value in the array
-	Notes: Used for duplication checking of the titles
-*/
+/**
+ * @description gets the number of occurrences of a value in an array
+ * @param {*} array the array to be searched
+ * @param {*} value the value to be searched for
+ * @return {*} returns the number of occurrences of the value in the array
+ */
 let getOccurrence = (array, value) => {
 	return array.filter((v) => v === value).length;
 };
 
-/*
-	Function: Check for duplicate titles and return a warning message if there are any
-	Parameters: clip_titles - the array of titles to be checked
-	Returns: None
-	Notes: Logs the warning message to the console, displays a notification if there are any duplicates; otherwise, returns nothing
-*/
+/**
+ * @description Check for duplicate titles and display a warning notification if there are any
+ * @param {*} clip_titles the array of clip titles to be checked
+ */
 let duplicateCheck = (clip_titles) => {
 	let clip_duplicate_titles = [];
 	let clip_duplicate_titles_counts = [];
@@ -70,12 +73,10 @@ let duplicateCheck = (clip_titles) => {
 	}
 };
 
-/*
-	Function: Copies the text argument onto the user's clipboard
-	Parameters: text - the text to be copied
-	Returns: None
-	Notes: Hacky way of copying text to the clipboard
-*/
+/**
+ * @description Copies the text argument onto the user's clipboard
+ * @param {*} text the text string to be copied
+ */
 let copyTextToClipboard = (text) => {
 	var copyFrom = document.createElement('textarea');
 	copyFrom.textContent = text;
@@ -87,12 +88,11 @@ let copyTextToClipboard = (text) => {
 	debugLog('Copied to clipboard: ' + text, true);
 };
 
-/*
-	Function: Promisified sleep function
-	Parameters: ms - the number of milliseconds to sleep
-	Returns: Promise
-	Notes: None
-*/
+/**
+ * @description Function to sleep for a specified amount of time
+ * @param {*} ms amount in milliseconds to wait
+ * @return {*} promise resolves after ms milliseconds
+ */
 let sleep = (ms) => {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 };

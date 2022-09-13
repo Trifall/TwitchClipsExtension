@@ -1,9 +1,15 @@
-/*
-	Function: Background listener for browser notification handling
-	Parameters: request, sender, sendResponse
-	Returns: true, if valid request
-	Notes: None
-*/
+/**
+ * @fileoverview Contains the backend service worker for displaying notifications
+ */
+
+/**
+ * @listens chrome.runtime.onMessage
+ * @description Background listener for browser notification handling
+ * @param {*} request
+ * @param {*} sender
+ * @param {*} sendResponse
+ * @returns true, if valid request
+ */
 chrome.runtime.onMessage.addListener(async function (
 	request,
 	sender,
