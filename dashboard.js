@@ -1,3 +1,14 @@
+/**
+ * @fileoverview The primary content script for the extension.
+ * 	- Calls the creation of the button on the dashboard page after the page is fully loaded
+ * 	- Grabs the links from the selected clips on the dashboard page
+ * 	- Copies the links to the clipboard
+ *  - Sends a notification to the user with the respective result
+ * @author
+ * 	- @name: 	Jerren
+ * 	- @github: https://github.com/Trifall
+ */
+
 window.addEventListener(
 	'load',
 	function load(event) {
@@ -7,11 +18,17 @@ window.addEventListener(
 	false
 );
 
+/** @global Development mode flag */
 const development = false;
 
+/** @global Contains the links of all of the clips */
 var clip_links = [];
+/** @global Contains the titles of all of the clips*/
 var clip_titles = [];
 
+/**
+ * @description  Entry point function. Called when the page is fully loaded.
+ */
 async function main() {
 	// init div selection
 	var ButtonDiv;
@@ -30,6 +47,10 @@ async function main() {
 	createButton(ButtonDiv);
 }
 
+/**
+ * @description Grabs the selected clips via the checkboxes and calls the grabClipLinks function after all the appropriate button elements are found
+ * @return {void} void
+ */
 async function grabClips() {
 	// get the element of the clip list panel
 	let clips_panel_list = document.querySelector(
@@ -106,9 +127,14 @@ async function grabClips() {
 	debugLog('(Finish) Clip links compiled');
 }
 
+/**
+ * @description Uses the selected buttons to open each panel of the selected clips and grab the links from the generated link elements
+ * 				- Had to make the clip_button_clickable variable select a child element because for some reason the button element itself was not clickable
+ * @param {*} clips_indexes the indexes of the selected clips
+ * @param {*} clips_panels_list the HTMLElement of the list of clip panels
+ * @param {*} clips_buttons the HTMLElements of the selected clip buttons
+ */
 async function grabClipLinks(clips_indexes, clips_panels_list, clips_buttons) {
-	// get the clip_links from the clips_buttons
-
 	// iterate over each clip button
 	for (var i = 0; i < clips_buttons.length; i++) {
 		await sleep(10);
@@ -182,6 +208,10 @@ async function grabClipLinks(clips_indexes, clips_panels_list, clips_buttons) {
 	duplicateCheck(clip_titles);
 }
 
+/**
+ * @description Getter method for the development variable
+ * @return {boolean} the value of the development variable
+ */
 let getDevelopment = () => {
-	return development;
+	return !!development;
 };
