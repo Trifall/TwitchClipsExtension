@@ -2,7 +2,7 @@
 
 [Chrome Store Page](https://chrome.google.com/webstore/detail/twitch-clips-helper/lnnmamblgkdjladkhgjecbhgopnfhnih)
 
-Activates on the https://dashboard.twitch.tv/u/USERNAME/content/clips page.
+Activates on the [https://dashboard.twitch.tv/u/<USERNAME\>/content/clips](https://dashboard.twitch.tv/content/clips) page.
 
 ## Functionality
 - Select the clips that have been made via the checkboxes on the individual clips in the dashboard panel.
