@@ -1,6 +1,7 @@
 # Twitch Clips Extension
 
 [Chrome Store Page](https://chrome.google.com/webstore/detail/twitch-clips-helper/lnnmamblgkdjladkhgjecbhgopnfhnih)
+[Firefox Store Page](https://addons.mozilla.org/en-US/firefox/addon/twitch-clips-helper/)
 
 Activates on the [https://dashboard.twitch.tv/u/<USERNAME\>/content/clips](https://dashboard.twitch.tv/content/clips) page.
 
