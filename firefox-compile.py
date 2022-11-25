@@ -12,4 +12,4 @@ shutil.copy2(root_src_dir + 'manifest_firefox.json',
              root_dst_dir + 'manifest.json')
 
 # Zip the contents of the TwitchClipsExtension folder into a TwitchClipsExtension.zip file
-os.system('7z a -tzip TwitchClipsExtension_Firefox.zip TwitchClipsExtension')
+os.system('7z a -tzip TwitchClipsExtension_Firefox.zip ./TwitchClipsExtension/*')
