@@ -16,6 +16,16 @@ let debugLog = async (message, devOnly) => {
 	else console.log('[Clips-Helper] ' + message);
 };
 
+function getElementByXpath(path) {
+	return document.evaluate(
+		path,
+		document,
+		null,
+		XPathResult.FIRST_ORDERED_NODE_TYPE,
+		null
+	).singleNodeValue;
+}
+
 /**
  * @description gets the number of occurrences of a value in an array
  * @param {*} array the array to be searched

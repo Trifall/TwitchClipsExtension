@@ -33,11 +33,13 @@ async function main() {
 	// init div selection
 	var ButtonDiv;
 
+	// console.log('clips extend test12312321312312');
+
 	// if its not there, wait 1 second and try again
 	do {
 		await sleep(50);
-		ButtonDiv = document.querySelector(
-			'#root > div.Layout-sc-nxg1ff-0.jNlVGw > div > div > div.Layout-sc-nxg1ff-0.aleoz.sunlight-default-root__root-wrapper > div > main > div > div.simplebar-scroll-content > div > div > div > div > div.Layout-sc-nxg1ff-0.imwtan.clmgr-table-wrap > div.Layout-sc-nxg1ff-0.gaKKxR > div > div.Layout-sc-nxg1ff-0.cyXQoi > div:nth-child(2)'
+		ButtonDiv = getElementByXpath(
+			'/html/body/div[1]/div[3]/div/div/div[2]/div/main/div/div[3]/div/div/div/div/div[2]/div[1]/div/div[2]/div[2]'
 		);
 	} while (ButtonDiv == null);
 
@@ -53,8 +55,8 @@ async function main() {
  */
 async function grabClips() {
 	// get the element of the clip list panel
-	let clips_panel_list = document.querySelector(
-		'#root > div.Layout-sc-nxg1ff-0.jNlVGw > div > div > div.Layout-sc-nxg1ff-0.aleoz.sunlight-default-root__root-wrapper > div > main > div > div.simplebar-scroll-content > div > div > div > div > div.Layout-sc-nxg1ff-0.imwtan.clmgr-table-wrap > div.Layout-sc-nxg1ff-0.fQeqDH.clmgr-table-inner > div > div.simplebar-scroll-content > div > div'
+	let clips_panel_list = getElementByXpath(
+		'/html/body/div[1]/div[3]/div/div/div[2]/div/main/div/div[3]/div/div/div/div/div[2]/div[3]/div/div[3]/div/div'
 	);
 
 	let clips_buttons = []; // for storing the HTMLElements of the clip buttons
@@ -74,9 +76,16 @@ async function grabClips() {
 		var clip_button = clip_panel.querySelector('button');
 
 		// select the checkbox element
-		var clip_checkbox_div = clip_button.querySelector(
-			'div > div.ScColumn-sc-tzah5l-0.bLLxGl.tw-col > div > div > div.Layout-sc-nxg1ff-0.ScCheckboxLayout-sc-1qewoje-0.fcPbos.lfrrrb.tw-checkbox'
-		);
+		// var clip_checkbox_div = clip_button.querySelector(
+		// 	'div > div.ScColumn-sc-tzah5l-0.bLLxGl.tw-col > div > div > div.Layout-sc-nxg1ff-0.ScCheckboxLayout-sc-1qewoje-0.fcPbos.lfrrrb.tw-checkbox'
+		// );
+
+		var clip_checkbox_div = clip_button
+			.getElementsByTagName('div')[0]
+			.getElementsByTagName('div')[0]
+			.getElementsByTagName('div')[0]
+			.getElementsByTagName('div')[0]
+			.getElementsByTagName('div')[1];
 
 		// get the input checkbox element from the parent div
 		var clip_input = clip_checkbox_div.firstChild;
@@ -142,17 +151,20 @@ async function grabClipLinks(clips_indexes, clips_panels_list, clips_buttons) {
 		var clip_button = clips_buttons[i];
 
 		// get the title of the current clip
-		let clip_title = clip_button.querySelector(
-			'div > div.ScColumn-sc-tzah5l-0.bLLxGl.tw-col > div > h5'
-		).innerHTML;
+		let clip_title = clip_button
+			.getElementsByTagName('div')[0]
+			.getElementsByTagName('div')[0]
+			.getElementsByTagName('div')[0]
+			.getElementsByTagName('h5')[0].innerHTML;
 
 		// add it to the array for later duplicate checking
 		clip_titles.push(clip_title);
 
 		// get the clickable element of the button
-		let clip_button_clickable = clip_button.querySelector(
-			'div > div.ScColumn-sc-tzah5l-0.bLLxGl.tw-col > div'
-		);
+		let clip_button_clickable = clip_button
+			.getElementsByTagName('div')[0]
+			.getElementsByTagName('div')[0]
+			.getElementsByTagName('div')[0];
 
 		// click the element to open the clip panel
 		clip_button_clickable.click();
@@ -163,16 +175,29 @@ async function grabClipLinks(clips_indexes, clips_panels_list, clips_buttons) {
 		while (
 			clips_panels_list.children[clips_indexes[i]].hasAttribute('data-a-target')
 		) {
+			console.log('clip index current: ' + clips_indexes[i]);
 			debugLog('Waiting for clip panel to open');
 			await sleep(10);
 		}
 
 		// get the 'a' element that contains the clip link
-		let clip_link_element = clips_panels_list.children[
-			clips_indexes[i]
-		].querySelector(
-			'div > div.Layout-sc-nxg1ff-0.koTxja > div.Layout-sc-nxg1ff-0.hiuuyA > div:nth-child(3) > a'
-		);
+		let clip_link_element = clips_panels_list.children[clips_indexes[i]]
+			.getElementsByTagName('div')[0]
+			.getElementsByTagName('div')[0]
+			.getElementsByTagName('div')[0]
+			.getElementsByTagName('a')[0];
+
+		if (development) {
+			// print children of div element clip_link_element
+			for (let i = 0; i < clip_link_element.children.length; i++) {
+				debugLog(
+					'clip_link_element child: ' + clip_link_element.children[i].innerHTML,
+					true
+				);
+			}
+		}
+
+		// debugLog('clip_link_element: ' + clip_link_element, true);
 
 		// if there is no 'a' element, throw error
 		if (clip_link_element == null) {
@@ -195,11 +220,24 @@ async function grabClipLinks(clips_indexes, clips_panels_list, clips_buttons) {
 
 		//if last clip panel in the list, then close the panel
 		if (i == clips_buttons.length - 1) {
-			let close_button = clips_panels_list.children[
-				clips_indexes[i]
-			].querySelector(
-				'div > div.Layout-sc-nxg1ff-0.koTxja > div.Layout-sc-nxg1ff-0.ScAttachedTooltipWrapper-sc-v8mg6d-0.hOVSHb > div.Layout-sc-nxg1ff-0.kxtmAi > button'
-			);
+			let close_button = clips_panels_list.children[clips_indexes[i]]
+				.getElementsByTagName('div')[0]
+				.getElementsByTagName('div')[0].children[1].firstChild.firstChild;
+
+			if (development) {
+				for (let i = 0; i < close_button.children.length; i++) {
+					debugLog(
+						'close_button child: ' + close_button.children[i].innerHTML,
+						true
+					);
+				}
+			}
+
+			await sleep(5);
+
+			debugLog('Closing Clip Panel with index [' + i + ']', true);
+			debugLog('close_button: ' + close_button.className, true);
+
 			if (close_button != null) close_button.click();
 		}
 	}
