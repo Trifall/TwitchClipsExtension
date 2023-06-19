@@ -33,12 +33,19 @@ async function main() {
 	// init div selection
 	var ButtonDiv;
 
-	console.log('clips extend test12312321312312');
-
 	// if its not there, wait 1 second and try again
 	do {
 		await sleep(50);
-		ButtonDiv = getElementByXpath('/html/body/div[1]/div[3]/div/div/div[2]/div/main/div/div[3]/div/div/div/div/div[1]/div[3]/div[2]');
+		const button = document.querySelectorAll('button[aria-label="More"]')[0];
+		// get the parent div of the button
+		if (!button) {
+			debugLog('More button not found, waiting 1 second and trying again');
+			await sleep(1000);
+			continue;
+		}
+
+		// get the parent div of the button
+		ButtonDiv = button.parentElement;
 	} while (ButtonDiv == null);
 
 	debugLog('Extension Initialized');
@@ -53,7 +60,13 @@ async function main() {
  */
 async function grabClips() {
 	// get the element of the clip list panel
-	let clips_panel_list = getElementByXpath('/html/body/div[1]/div[3]/div/div/div[2]/div/main/div/div[3]/div/div/div/div/div[3]/div[3]/div/div');
+	let simplebar_elements = document.getElementsByClassName('simplebar-content');
+	let clips_panel_list = simplebar_elements[simplebar_elements.length - 1].firstChild;
+	if (!clips_panel_list) {
+		errorNotif('Clips panel not found.');
+		debugLog('ERROR: Clips panel not found.');
+		return;
+	}
 
 	let clips_buttons = []; // for storing the HTMLElements of the clip buttons
 	let clips_indexes = []; // for storing the indexes of the buttons
@@ -63,10 +76,16 @@ async function grabClips() {
 	//print out all the children of the clips_panel_list
 	debugLog('clip_panels: ' + clip_panels, true);
 
+	if (!clip_panels) {
+		errorNotif('No clips found on the dashboard.');
+		debugLog('ERROR: No clips found on the dashboard.');
+		return;
+	}
 	// get the button elements from each of the clicked clips
 	for (var i = 0; i < clip_panels.length - 1; i++) {
 		// iterate over each panel
 		var clip_panel = clip_panels[i];
+		debugLog('clip_panel [' + i + ']: ' + clip_panel, true);
 
 		// select the button element
 		var clip_button = clip_panel.querySelector('[role="button"]');
