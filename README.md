@@ -3,13 +3,13 @@ A browser extension for Chrome and Firefox browsers to add extra functionality t
 
 ## Overview
 
-Automatically grab links from the selected twitch clips on the dashboard. (dashboard.twitch.tv/u/<user>/content/clips)
+Automatically grab links from the selected twitch clips on the dashboard.
 
-On the dashboard page of Twitch.tv (https://dashboard.twitch.tv/u/<user>/content/clips), you can select multiple clips you have created, but Twitch only provides the option to delete them in bulk.
+On the dashboard page of Twitch.tv (dashboard.twitch.tv/u/< USERNAME >/content/clips), you can select multiple clips you have created, but Twitch only provides the option to delete them in bulk.
 
 In order to get the clip link normally, you would have to click each individual clip, then the clip link button, then copy the link.
 
-This extension improves the speed of that process by automatically grabbing all of the clip links from the selected clips via the check-boxes on the left side of the dashboard page, and then copies it to your clipboard.
+This extension improves the speed of that process by automatically grabbing all of the clip links from the selected clips via the check-boxes on the left side of the dashboard page, and then copies it to your clipboard automatically.
 
 
 ## Functionality
