@@ -13,6 +13,8 @@ let createButton = async (ButtonDiv) => {
 	button.style.marginRight = '5px';
 	button.style.radius = '25px';
 	button.style.padding = '5px';
+	button.style.background = '#3c3c44';
+	button.style.borderRadius = '1rem';
 	button.innerHTML = 'Compile Clip Links';
 	button.onclick = function () {
 		clip_links = [];
