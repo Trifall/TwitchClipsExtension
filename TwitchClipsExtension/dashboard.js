@@ -150,88 +150,70 @@ async function grabClips() {
  * @param {*} clips_buttons the HTMLElements of the selected clip buttons
  */
 async function grabClipLinks(clips_indexes, clips_panels_list, clips_buttons) {
+	debugLog('Starting grabClipLinks with global clip_links:', clip_links);
+    
 	// iterate over each clip button
 	for (var i = 0; i < clips_buttons.length; i++) {
-		await sleep(10);
+			try {
+					await sleep(100);
+					
+					let clip_button = clips_buttons[i];
+					let clip_title = clip_button.querySelector('h5').innerHTML;
+					debugLog(`Processing clip ${i + 1}/${clips_buttons.length}: ${clip_title}`);
+					
+					clip_titles.push(clip_title);
+					
+					let clip_button_clickable = clip_button.getElementsByTagName('div')[0]
+							.getElementsByTagName('div')[0]
+							.getElementsByTagName('div')[0];
+					
+					clip_button_clickable.click();
+					debugLog(`Clicked panel for clip ${i + 1}`, true);
+					
+					const child_panel = clips_panels_list.children[clips_indexes[i]];
 
-		var clip_button = clips_buttons[i];
+					while(child_panel.querySelectorAll('a').length < 3) {
+						debugLog(`Waiting for clip panel to open`, true);
+						await sleep(50);
+					}
+					
+					let clip_link_elements = child_panel.querySelectorAll('a');
+					debugLog(`Found ${clip_link_elements.length} potential link elements`);
+					
+					let clip_link = null;
+					for (let j = 0; j < clip_link_elements.length; j++) {
+							const href_value = clip_link_elements[j].getAttribute('href');
+							debugLog(`href_value: ${href_value}`, true);
+							if (href_value && href_value.toLowerCase().includes('https://www.twitch.tv/') && 
+									href_value.toLowerCase().includes('/clip/')) {
+									debugLog(`passed href_value check for href value: ${href_value}`, true);
 
-		// get the title of the current clip
-		let clip_title = clip_button.querySelector('h5').innerHTML;
-
-		// add it to the array for later duplicate checking
-		clip_titles.push(clip_title);
-
-		// get the clickable element of the button
-		let clip_button_clickable = clip_button.getElementsByTagName('div')[0].getElementsByTagName('div')[0].getElementsByTagName('div')[0];
-
-		// click the element to open the clip panel
-		clip_button_clickable.click();
-
-		debugLog('Opening Clip Panel with index [' + i + ']', true);
-
-		// Wait for the clip panel to open after clicking it by checking if the 'data-a-target' attribute exists
-		while (clips_panels_list.children[clips_indexes[i]].hasAttribute('data-a-target')) {
-			console.log('clip index current: ' + clips_indexes[i]);
-			debugLog('Waiting for clip panel to open');
-			await sleep(10);
-		}
-
-		// get the 'a' element that contains the clip link
-		let clip_link_elements = clips_panels_list.children[clips_indexes[i]].querySelectorAll('a');
-
-		for (let j = 0; j < clip_link_elements.length; j++) {
-			// check if href link contains 'https://clips.twitch.tv/'
-			if (clip_link_elements[j].getAttribute('href')) {
-				if (clip_link_elements[j].getAttribute('href').toLowerCase().includes('https://clips.twitch.tv/')) {
-					// if it does, set the clip_link_element to the current element
-					clip_link_element = clip_link_elements[j];
-					debugLog('Found clip link element', true);
-					break;
-				}
+									clip_link = href_value;
+									debugLog(`Found valid clip link on clip index ${i}`, true);
+									break;
+							}
+					}
+					
+					if (!clip_link) {
+							throw new Error(`No valid clip link found for clip ${i + 1}`);
+					}
+					
+					clip_link = clip_link.substring(0, clip_link.indexOf('?') === -1 ? clip_link.length : clip_link.indexOf('?'));
+					clip_links.push(clip_link);
+					
+					if (i === clips_buttons.length - 1) {
+							clip_button_clickable.click();
+							await sleep(5);
+					}
+			} catch (error) {
+					console.error(`Error processing clip ${i + 1}:`, error);
+					throw error; // Re-throw to stop processing if there's an error
 			}
-
-			debugLog('clip_link_elements[' + j + ']: ' + clip_link_elements[j].innerHTML, true);
-		}
-
-		if (development) {
-			// print children of div element clip_link_element
-			// for (let i = 0; i < clip_link_element.children.length; i++) {
-			// 	debugLog('clip_link_element child: ' + clip_link_element.children[i].innerHTML, true);
-			// }
-		}
-
-		// debugLog('clip_link_element: ' + clip_link_element, true);
-
-		// if there is no 'a' element, throw error
-		if (clip_link_element == null) {
-			throw console.error('[Clips-Helper] ' + 'clip_link_element is null, most likely a loading issue');
-		}
-
-		// get the href value of the 'a' element
-		let clip_link = clip_link_element.getAttribute('href');
-
-		// remove everything in the string after the first '?'
-		clip_link = clip_link.substring(0, clip_link.indexOf('?'));
-
-		// debugLog('clip_link: ' + clip_link, true);
-
-		// add clip link to the array
-		clip_links.push(clip_link);
-
-		//if last clip panel in the list, then close the panel
-		if (i == clips_buttons.length - 1) {
-			clip_button_clickable.click();
-
-			await sleep(5);
-
-			debugLog('Closing Clip Panel with index [' + i + ']', true);
-			// debugLog('clip_button_clickable: ' + clip_button_clickable.className, true);
-		}
 	}
-
-	// Check for duplicate clip titles
+	
+	debugLog('Final clip_links array:', clip_links, true);
 	duplicateCheck(clip_titles);
+	return clip_links; // Explicitly return the array
 }
 
 /**
