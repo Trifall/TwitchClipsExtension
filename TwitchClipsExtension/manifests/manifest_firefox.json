@@ -1,7 +1,7 @@
 {
 	"name": "Twitch Clips Helper",
 	"description": "Automatically grab links from the selected twitch clips on the dashboard. \n (dashboard.twitch.tv/u/<user>/content/clips)",
-	"version": "1.61",
+	"version": "1.62",
 	"manifest_version": 2,
 	"background": { "scripts": ["background.js"] },
 	"browser_specific_settings": {
